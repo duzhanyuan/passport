@@ -17,7 +17,6 @@ from libs.base import PluginBase
 #: 在这里导入其他模块, 如果有自定义包目录, 使用相对导入, 如: from .lib import Lib
 from config import SYSTEM
 from utils.tool import logger
-from utils.web import verify_sessionId
 from flask import Blueprint, request, jsonify, g, redirect, url_for, render_template_string
 
 #：Your plug-in name must be consistent with the plug-in directory name.
@@ -47,6 +46,25 @@ __readme_file__ = "README"
 #: Plugin state, enabled or disabled, default: enabled
 #: 插件状态, enabled、disabled, 默认enabled
 __state__       = "enabled"
+
+def verify_sessionId(cookie):
+    """验证cookie"""
+    if cookie:
+        try:
+            sessionId = AESDecrypt(SYSTEM["SECRET_KEY"], cookie, input="hex")
+        except Exception, e:
+            logger.debug(e)
+        else:
+            try:
+                success = jwt.verifyJWT(sessionId)
+            except JWTException, e:
+                logger.debug(e)
+            else:
+                # 验证token无误即设置登录态，所以确保解密、验证两处key切不可丢失，否则随意伪造！
+                return success
+    return False
+
+
 
 sso_blueprint = Blueprint("sso", "sso")
 @sso_blueprint.route("/")

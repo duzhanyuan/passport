@@ -24,7 +24,6 @@ from libs.base import ServiceBase
 
 jwt = JWTUtil()
 sbs = ServiceBase()
-AESKEY = SYSTEM["SECRET_KEY"]
 
 def get_referrer_url():
     """获取上一页地址"""
@@ -67,14 +66,14 @@ def set_sessionId(uid, seconds=SYSTEM["SESSION_EXPIRE"], sid=None):
     """设置cookie"""
     payload = dict(uid=uid, sid=sid) if sid else dict(uid=uid)
     sessionId = jwt.createJWT(payload=payload, expiredSeconds=seconds)
-    return AESEncrypt(AESKEY, sessionId, output="hex")
+    return AESEncrypt(SYSTEM["SECRET_KEY"], sessionId, output="hex")
 
 
 def verify_sessionId(cookie):
     """验证cookie"""
     if cookie:
         try:
-            sessionId = AESDecrypt(AESKEY, cookie, input="hex")
+            sessionId = AESDecrypt(SYSTEM["SECRET_KEY"], cookie, input="hex")
         except Exception, e:
             logger.debug(e)
         else:
@@ -93,7 +92,7 @@ def analysis_sessionId(cookie, ReturnType="dict"):
     data = dict()
     if cookie:
         try:
-            sessionId = AESDecrypt(AESKEY, cookie, input="hex")
+            sessionId = AESDecrypt(SYSTEM["SECRET_KEY"], cookie, input="hex")
         except Exception, e:
             logger.debug(e)
         else:

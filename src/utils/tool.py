@@ -48,7 +48,7 @@ err_logger = Logger("error").getLogger
 plugin_logger = Logger("plugin").getLogger
 access_logger = Logger("access").getLogger
 md5 = lambda pwd: hashlib.md5(pwd).hexdigest()
-hmac_sha256 = lambda message: hmac.new(key=SYSTEM["SECRET_KEY"], msg=message, digestmod=hashlib.sha256).hexdigest()
+hmac_sha256 = lambda message, secretkey=None: hmac.new(key=secretkey or SYSTEM["SECRET_KEY"], msg=message, digestmod=hashlib.sha256).hexdigest()
 gen_token = lambda n=32: b32encode(uuid4().hex)[:n]
 gen_requestId = lambda: str(uuid4())
 gen_fingerprint = lambda n=16, s=2: ":".join(["".join(random.sample("0123456789abcdef", s)) for i in range(0, n)])

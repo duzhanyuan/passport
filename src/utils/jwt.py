@@ -39,7 +39,7 @@ class InvalidTokenError(JWTException):
 class JWTUtil(object):
     """ Json Web Token Utils """
 
-    def __init__(self):
+    def __init__(self, secretkey=None):
         """ 定义公共变量
         @param secretkey str: 签名加密串,建议足够复杂,切勿丢失;
         @param audience str: 标准载荷声明中的aud,即接收方;
@@ -52,7 +52,7 @@ class JWTUtil(object):
             iat: 签发时间，UNIX时间戳
             jti: 唯一身份标识
         """
-        self.secretkey = SYSTEM["SECRET_KEY"]
+        self.secretkey = secretkey or SYSTEM["SECRET_KEY"]
         self._header = {
             "typ": "JWT",
             "alg": "HS256"
