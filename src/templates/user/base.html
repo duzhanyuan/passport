@@ -29,6 +29,7 @@
                     <dd><a href="{{ url_for('front.userset') }}"><i class="saintic-icon saintic-icon-setting"></i>基本设置</a></dd>
                     <dd><a href="{{ url_for('front.usersecurity') }}"><i class="saintic-icon saintic-icon-security"></i>账号安全</a></dd>
                     <dd><a href="{{ url_for('front.usermsg') }}"><i class="saintic-icon saintic-icon-message"></i>我的消息</a></dd>
+                    <dd><a href="{{ url_for('front.userapp') }}"><i class="saintic-icon saintic-icon-app-management"></i>应用管理</a></dd>
                     <hr style="margin: 5px 0;">
                     <dd><a href="{{ url_for('front.signOut') }}"><i class="saintic-icon saintic-icon-logout"></i>注销登录</a></dd>
                 </dl>
@@ -51,16 +52,14 @@
         <li class="layui-nav-item {% if request.endpoint == 'front.usermsg' %}layui-this{% endif %}">
             <a href="{{ url_for('front.usermsg') }}"><i class="saintic-icon saintic-icon-message"></i>&nbsp;&nbsp;我的消息</a>
         </li>
-        {% if tpl_adminlogin_required() %}
+        <li class="layui-nav-item {% if request.endpoint == 'front.userapp' %}layui-this{% endif %}">
+            <a href="{{ url_for('front.userapp') }}"><i class="saintic-icon saintic-icon-app-management"></i>&nbsp;&nbsp;应用管理</a>
+        </li>
         <!--
         <li class="layui-nav-item {% if request.endpoint == 'front.sysmanager' %}layui-this{% endif %}">
             <a href="{{ url_for('front.sysmanager') }}"><i class="saintic-icon saintic-icon-system-setting"></i>&nbsp;&nbsp;系统管理</a>
         </li>
         -->
-        <li class="layui-nav-item {% if request.endpoint == 'front.userapp' %}layui-this{% endif %}">
-            <a href="{{ url_for('front.userapp') }}"><i class="saintic-icon saintic-icon-app-management"></i>&nbsp;&nbsp;应用管理</a>
-        </li>
-        {% endif %}
     </ul>
     <!--移动端适应按钮-->
     <div class="site-tree-mobile layui-hide">

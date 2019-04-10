@@ -52,7 +52,7 @@ class JWTUtil(object):
             iat: 签发时间，UNIX时间戳
             jti: 唯一身份标识
         """
-        self.secretkey = SYSTEM["JWT_SECRET_KEY"]
+        self.secretkey = SYSTEM["SECRET_KEY"]
         self._header = {
             "typ": "JWT",
             "alg": "HS256"

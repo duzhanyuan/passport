@@ -37,7 +37,7 @@ def userset():
     return render_template("user/setting.html")
 
 @FrontBlueprint.route('/user/app/')
-@adminlogin_required
+@login_required
 def userapp():
     Action = request.args.get("Action")
     if Action == "editView":

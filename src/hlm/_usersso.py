@@ -222,7 +222,7 @@ class UserSSOManager(ServiceBase):
                 data.update(uid=uid, token=token)
                 kwargs = []
                 for clientName in clients:
-                    clientData = getUserApp(clientName)
+                    clientData = getUserApp(uid, clientName)
                     kwargs.append(dict(url="{}/sso/authorized".format(clientData["app_redirect_url"].strip("/")), params=dict(Action="ssoConSync", signature=hmac_sha256("{}:{}:{}".format(clientData["name"], clientData["app_id"], clientData["app_secret"])).upper()), data=data, num_retries=0))
                 logger.debug("callback: kwargs: {}".format(kwargs))
                 if kwargs:

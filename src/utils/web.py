@@ -11,22 +11,20 @@
 
 import json
 import requests
-from .tool import access_logger, logger, gen_fingerprint, parseAcceptLanguage, get_current_timestamp, timestamp_after_timestamp
-from .jwt import JWTUtil, JWTException
-from .aes_cbc import CBC
-from libs.base import ServiceBase
 from urllib import urlencode
 from functools import wraps
-from flask import g, request, redirect, url_for, make_response, abort, jsonify, flash
 from werkzeug import url_decode
-from config import SYSTEM, VAPTCHA
 from vaptchasdk import vaptcha as pyvaptcha
-
+from SecureHTTP import AESEncrypt, AESDecrypt
+from flask import g, request, redirect, url_for, make_response, abort, jsonify, flash
+from config import SYSTEM, VAPTCHA
+from .tool import access_logger, logger, gen_fingerprint, parseAcceptLanguage, get_current_timestamp, timestamp_after_timestamp
+from .jwt import JWTUtil, JWTException
+from libs.base import ServiceBase
 
 jwt = JWTUtil()
-cbc = CBC()
 sbs = ServiceBase()
-
+AESKEY = SYSTEM["SECRET_KEY"]
 
 def get_referrer_url():
     """获取上一页地址"""
@@ -69,14 +67,14 @@ def set_sessionId(uid, seconds=SYSTEM["SESSION_EXPIRE"], sid=None):
     """设置cookie"""
     payload = dict(uid=uid, sid=sid) if sid else dict(uid=uid)
     sessionId = jwt.createJWT(payload=payload, expiredSeconds=seconds)
-    return cbc.encrypt(sessionId)
+    return AESEncrypt(AESKEY, sessionId, output="hex")
 
 
 def verify_sessionId(cookie):
     """验证cookie"""
     if cookie:
         try:
-            sessionId = cbc.decrypt(cookie)
+            sessionId = AESDecrypt(AESKEY, cookie, input="hex")
         except Exception, e:
             logger.debug(e)
         else:
@@ -95,7 +93,7 @@ def analysis_sessionId(cookie, ReturnType="dict"):
     data = dict()
     if cookie:
         try:
-            sessionId = cbc.decrypt(cookie)
+            sessionId = AESDecrypt(AESKEY, cookie, input="hex")
         except Exception, e:
             logger.debug(e)
         else:

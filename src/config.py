@@ -98,21 +98,8 @@ PHONE = {
 # 系统配置
 SYSTEM = {
 
-    "HMAC_SHA256_KEY": getenv("passport_hmac_sha256_key", "273d32c8d797fa715190c7408ad73811"),
-    # hmac sha256 key
-
-    "AES_CBC_KEY": getenv("passport_aes_cbc_key", "YRRGBRYQqrV1gv5A"),
-    # utils.aes_cbc.CBC类中所用加密key
-
-    "JWT_SECRET_KEY": getenv("passport_jwt_secret_key", "WBlE7_#qDf2vRb@vM!Zw#lqrg@rdd3A6"),
-    # utils.jwt.JWTUtil类中所用加密key
-
-    "Sign": {
-        "version": getenv("passport_sign_version", "v1"),
-        "accesskey_id": getenv("passport_sign_accesskeyid", "accesskey_id"),
-        "accesskey_secret": getenv("passport_sign_accesskeysecret", "accesskey_secret"),
-    },
-    # utils.Signature.Signature类中所有签名配置
+    "SECRET_KEY": getenv("passport_secret_key", "d1d5eb327d55d83eb96ead9cdd1394e8"),
+    # AES、JWT、HMAC等加密key
 
     "CACHE_ENABLE": {
 

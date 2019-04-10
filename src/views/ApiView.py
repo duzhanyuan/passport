@@ -132,9 +132,9 @@ def misc_feedback():
     return jsonify(dfr(res))
 
 @ApiBlueprint.route("/user/app/", methods=["GET", "POST", "PUT", "DELETE"])
-@apiadminlogin_required
+@apilogin_required
 def userapp():
-    """管理接口"""
+    """SSO应用接口"""
     res = dict(msg=None, code=1)
     if request.method == "GET":
         # 定义参数
@@ -152,7 +152,7 @@ def userapp():
             res.update(code=2, msg="There are invalid parameters")
         else:
             # 从封装类中获取数据
-            res.update(g.api.userapp.listUserApp())
+            res.update(g.api.userapp.listUserApp(g.uid))
             data = res.get("data")
             if data and isinstance(data, (list, tuple)):
                 data = [i for i in sorted(data, reverse=False if sort == "asc" else True)]
@@ -169,15 +169,15 @@ def userapp():
         name = request.form.get("name")
         description = request.form.get("description")
         app_redirect_url = request.form.get("app_redirect_url")
-        res.update(g.api.userapp.createUserApp(name=name, description=description, app_redirect_url=app_redirect_url))
+        res.update(g.api.userapp.createUserApp(uid=g.uid, name=name, description=description, app_redirect_url=app_redirect_url))
     elif request.method == "PUT":
         name = request.form.get("name")
         description = request.form.get("description")
         app_redirect_url = request.form.get("app_redirect_url")
-        res.update(g.api.userapp.updateUserApp(name=name, description=description, app_redirect_url=app_redirect_url))
+        res.update(g.api.userapp.updateUserApp(uid=g.uid, name=name, description=description, app_redirect_url=app_redirect_url))
     elif request.method == "DELETE":
         name = request.form.get("name")
-        res.update(g.api.userapp.deleteUserApp(name=name))
+        res.update(g.api.userapp.deleteUserApp(uid=g.uid, name=name))
         FastPushMessage(res, "您于<i>{}</i>删除了一个SSO客户端应用：<strong>{}</strong>".format(timestamp_to_timestring(get_current_timestamp()), name))
     logger.info(res)
     return jsonify(dfr(res))

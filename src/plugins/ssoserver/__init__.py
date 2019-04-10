@@ -18,7 +18,7 @@ from libs.base import PluginBase
 from config import SYSTEM
 from utils.tool import logger
 from utils.web import verify_sessionId
-from flask import Blueprint, request, jsonify, g, redirect, url_for
+from flask import Blueprint, request, jsonify, g, redirect, url_for, render_template_string
 
 #：Your plug-in name must be consistent with the plug-in directory name.
 #：你的插件名称，必须和插件目录名称等保持一致.
@@ -55,7 +55,8 @@ def index():
     sso = request.args.get("sso")
     if verify_sessionId(sso):
         return redirect(url_for("front.signIn", sso=sso))
-    return redirect(url_for("front.signIn"))
+    else:
+        return render_template_string('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="5;url=%s"></head><body>登录参数无效，将跳转到登录页！</body></html>' %url_for("front.signIn"))
 
 @sso_blueprint.route("/validate", methods=["POST"])
 def validate():
@@ -73,7 +74,7 @@ def validate():
                 if resp and isinstance(resp, dict):
                     # 此时表明ticket验证通过，应当返回如下信息：
                     # dict(uid=所需, sid=所需，source=xx)
-                    if g.api.userapp.getUserApp(app_name):
+                    if g.api.userapp.getUserApp(resp["uid"], app_name):
                         # app_name有效，验证全部通过
                         res.update(success=True, uid=resp["uid"], sid=resp["sid"], expire=SYSTEM["SESSION_EXPIRE"])
                         # 有效，此sid已登录客户端中注册app_name且向uid中注册已登录的sid
